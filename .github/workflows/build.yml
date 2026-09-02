@@ -20,20 +20,33 @@ jobs:
           distribution: temurin
           java-version: '17'
 
+      - name: Check project
+        run: |
+          echo "===== PROJECT ====="
+          find . -maxdepth 4 -type f | sort
+
       - name: Build APK
         run: |
           chmod +x gradlew
           ./gradlew :app:assembleDebug --stacktrace
 
-      - name: Find APK
+      - name: Check build output
+        if: always()
         run: |
-          echo "Searching for APK..."
+          echo "===== APK SEARCH ====="
           find . -type f -name "*.apk" -print
 
+          echo "===== BUILD DIRECTORIES ====="
+          find . -type d -name build -print
+
+          echo "===== APP OUTPUT ====="
+          find app/build -type f -print 2>/dev/null || true
+
       - name: Upload APK
+        if: success()
         uses: actions/upload-artifact@v4
         with:
           name: Python-APK
           path: |
-            **/build/outputs/apk/**/*.apk
+            app/build/outputs/**/*.apk
           if-no-files-found: error
