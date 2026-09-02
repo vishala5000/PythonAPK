@@ -1,4 +1,4 @@
-package com.example.pythonapp;
+package com.pythonapk;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -15,21 +15,28 @@ public class MainActivity extends Activity {
 
         TextView textView = new TextView(this);
 
-        textView.setText(
-                "Python APK\n\n" +
-                "Python runtime started successfully."
-        );
-
+        textView.setText("Starting Python...");
         textView.setTextSize(22);
 
         setContentView(textView);
 
-        Python python = Python.getInstance();
+        try {
+            Python python = Python.getInstance();
 
-        PyObject module = python.getModule("app");
+            PyObject module = python.getModule("app");
 
-        PyObject result = module.callAttr("main");
+            PyObject result = module.callAttr("main");
 
-        System.out.println("Python result: " + result);
+            textView.setText(String.valueOf(result));
+
+        } catch (Exception e) {
+
+            textView.setText(
+                    "Python Error:\n\n" +
+                    e.getMessage()
+            );
+
+            e.printStackTrace();
+        }
     }
 }
