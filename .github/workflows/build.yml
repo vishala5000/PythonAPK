@@ -11,6 +11,7 @@ jobs:
     runs-on: ubuntu-22.04
 
     steps:
+
       - name: Checkout
         uses: actions/checkout@v4
 
@@ -20,26 +21,27 @@ jobs:
           distribution: temurin
           java-version: '17'
 
-      - name: Check project
+      - name: Check files
         run: |
-          echo "===== PROJECT ====="
-          find . -maxdepth 4 -type f | sort
+          echo "===== FILES ====="
+          find . -maxdepth 5 -type f | sort
 
-      - name: Build APK
+      - name: Check Gradle
         run: |
           chmod +x gradlew
-          ./gradlew :app:assembleDebug --stacktrace
+          ./gradlew --version
 
-      - name: Check build output
+      - name: Build
+        run: |
+          ./gradlew :app:assembleDebug --info --stacktrace
+
+      - name: Show APK
         if: always()
         run: |
-          echo "===== APK SEARCH ====="
+          echo "===== ALL APK FILES ====="
           find . -type f -name "*.apk" -print
 
-          echo "===== BUILD DIRECTORIES ====="
-          find . -type d -name build -print
-
-          echo "===== APP OUTPUT ====="
+          echo "===== APP BUILD ====="
           find app/build -type f -print 2>/dev/null || true
 
       - name: Upload APK
@@ -47,6 +49,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: Python-APK
-          path: |
-            app/build/outputs/**/*.apk
+          path: app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
