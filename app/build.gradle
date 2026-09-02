@@ -4,14 +4,13 @@ plugins {
 }
 
 android {
-    namespace 'com.example.pythonapp'
-    compileSdk 35
+    namespace 'com.pythonapk'
+    compileSdk 36
 
     defaultConfig {
-        applicationId 'com.example.pythonapp'
-
+        applicationId 'com.pythonapk'
         minSdk 24
-        targetSdk 35
+        targetSdk 36
 
         versionCode 1
         versionName "1.0"
@@ -20,6 +19,11 @@ android {
             abiFilters "arm64-v8a", "armeabi-v7a"
         }
     }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
 }
 
 chaquopy {
@@ -27,10 +31,7 @@ chaquopy {
         version = "3.11"
 
         pip {
-            install "-r", "requirements.txt"
+            install "-r", "../requirements.txt"
         }
     }
-}
-
-dependencies {
 }
