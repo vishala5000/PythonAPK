@@ -9,31 +9,41 @@ import com.chaquo.python.Python;
 
 public class MainActivity extends Activity {
 
+    private TextView textView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        TextView textView = new TextView(this);
-
+        textView = new TextView(this);
+        textView.setTextSize(20);
+        textView.setPadding(30, 30, 30, 30);
         textView.setText("Starting Python...");
-        textView.setTextSize(22);
 
         setContentView(textView);
 
+        runPython();
+    }
+
+    private void runPython() {
         try {
             Python python = Python.getInstance();
 
-            PyObject module = python.getModule("app");
+            PyObject app = python.getModule("app");
 
-            PyObject result = module.callAttr("main");
+            PyObject result = app.callAttr("main");
 
-            textView.setText(String.valueOf(result));
+            textView.setText(
+                    result != null
+                            ? result.toString()
+                            : "Python finished successfully."
+            );
 
         } catch (Exception e) {
 
             textView.setText(
                     "Python Error:\n\n" +
-                    e.getMessage()
+                    e.toString()
             );
 
             e.printStackTrace();
